@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Coursery helps you use WPI course evaluations to find great classes. Look for the most popular courses and professors, get a sense of class workload, and more.">
+    <meta name="author" content="Ben McMorran">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <!-- Open Graph data -->
+    <meta property="og:title" content="WPI Coursery" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://users.wpi.edu/~bjmcmorran/coursery" />
+    <meta property="og:description" content="Coursery helps you use WPI course evaluations to find great classes. Look for the most popular courses and professors, get a sense of class workload, and more." /> 
+
+    <title>WPI Coursery</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <!-- NProgress CSS -->
+    <link href="css/nprogress.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+        body {
+            padding-top: 20px;
+            background-image: url('img/furley_bg.png');
+        }
+
+        .good {
+            background-color: #DFF0D8;
+        }
+
+        .okay {
+            background-color: #FCF8E3;
+        }
+
+        .bad {
+            background-color: #F2DEDE;
+        }
+    </style>
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+    <script type="text/javascript">var switchTo5x=true;</script>
+    <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+    <script type="text/javascript" src="http://s.sharethis.com/loader.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h1 class="panel-title" style="font-size: 24px;">
+                    <span class="glyphicon glyphicon-book"></span>
+                    WPI Coursery <sup><small>(beta)</small></sup>
+                    <span class="glyphicon glyphicon-question-sign pull-right" data-toggle="modal" data-target="#helpModal"></span>
+                </h1>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr><th colspan="5">Course Selection</th><th colspan="5">Student Ratings</th></tr>
+                        <tr>
+                            <th id="yrHeader">Year</th>
+                            <th id="suHeader">Subject</th>
+                            <th id="crHeader">Course</th>
+                            <th id="scHeader">Section</th>
+                            <th id="inHeader">Instructor</th>
+                            <th id="rcHeader"><span href="#" rel="tooltip" data-toggle="tooltip" title="Average overall course rating from 1 to 5">Course</span><span id="sortArrow" class="glyphicon glyphicon-chevron-down pull-right"></span></th>
+                            <th id="riHeader"><span href="#" rel="tooltip" data-toggle="tooltip" title="Average overall instructor rating from 1 to 5">Instructor</span></th>
+                            <th id="wlHeader"><span href="#" rel="tooltip" data-toggle="tooltip" title="Average workload, including class time, in hours per week">Workload</span></th>
+                            <th id="grHeader"><span href="#" rel="tooltip" data-toggle="tooltip" title="Most common grade students received">Grade</span></th>
+                            <th />
+                        </tr>
+                        <tr>
+                            <td>
+                                <select id="year" class="form-control">
+                                </select>
+                            </td>
+                            <td>
+                                <select id="subject" class="form-control">
+                                </select>
+                            </td>
+                            <td>
+                                <select id="course" class="form-control">
+                                </select>
+                            </td>
+                            <td>
+                                <select id="section" class="form-control">
+                                </select>
+                            </td>
+                            <td>
+                                <select id="instructor" class="form-control">
+                                </select>
+                            </td>
+                            <td colspan="5" />
+                        </tr>
+                    </thead>
+                    <tbody id="results">
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                Coursery is not affiliated, endorsed, or sponsored by Worcester Polytechnic Institute.
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="helpModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="helpModalLabel">Help</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Coursery helps you use course evaluations to find great classes. For example:
+                    </p>
+                    <ul>
+                        <li>
+                            <strong>Find the highest rated classes in a department.</strong> Select <em>Average</em> for year, section, and instructor, the department for subject, and <em>All</em> for course. Click on the course rating to sort by that field.
+                        </li>
+                        <li>
+                            <strong>Find the highest rated instructors for a class.</strong> Select <em>Average</em> for year and section. Choose the appropriate subject and course number. Select <em>All</em> for instructor. Click on the instructor rating to sort by that field.
+                        </li>
+                        <li>
+                            <strong>See what ratings looked like for a class you took.</strong> Select the appropriate year, subject, course number, and section. Look at the summary data, or click the full report button (on the far right) to see the full evaluation.
+                        </li>
+                    </ul>
+                    <p>
+                        Where did all this data come from? <em>Students like you.</em> These course evaluations are available on BannerWeb as well, but are simply presented here in a much more accessible way.
+                    </p>
+                    <p>
+                        Thanks to <a href="http://www.famfamfam.com/lab/icons/silk/">Mark James</a> for the favicon and <a href="http://glyphicons.com/">Jan Kovařík</a> for the other icons used.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/nprogress.js"></script>
+    <script src="js/courses.js"></script>
+    <script src="js/client.js"></script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44890839-2', 'wpi.edu');
+  ga('send', 'pageview');
+
+    </script>
+    <script type="text/javascript">stLight.options({publisher: "ur-ef965919-9e08-3392-b131-e7d6d05b4ac", doNotHash: false, doNotCopy: false, hashAddressBar: false});</script>
+    <script>
+    var options={ "publisher": "ur-ef965919-9e08-3392-b131-e7d6d05b4ac", "position": "left", "ad": { "visible": false, "openDelay": 5, "closeDelay": 0}, "chicklets": { "items": ["facebook", "twitter", "reddit", "googleplus", "email"]}};
+    var st_hover_widget = new sharethis.widgets.hoverbuttons(options);
+    </script>
+  </body>
+</html>
