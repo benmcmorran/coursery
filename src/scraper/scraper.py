@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import os
 
 class InvalidLoginError(Exception):
     pass
@@ -53,7 +54,7 @@ def downloadEvaluations(urlFile):
             os.mkdir(directory)
         except Exception:
             pass
-        for url in urls.readlines():
+        for url in urls.read().splitlines():
             print('Downloading evaluation ' + str(i))
             downloadEvaluation(url, os.path.join(directory, str(i) + '.htm'))
             i += 1
