@@ -73,14 +73,25 @@ $(function() {
 });
 
 function fillSelect(element, values, transform) {
+    element = element[0];
     var html = "";
-    html += "<option value=\"All\">All</option>";
-    html += "<option value=\"Average\">Average</option>";
+    var createOption = function(name, value) {
+        var opt = document.createElement('option');
+        opt.innerHTML = name;
+        var val = value === undefined ? name : value;
+        opt.value = val;
+        return opt;
+    }
+    var all = createOption("All");
+    var avg = createOption("Average");
+    // debugger;
+    element.appendChild(all);
+    element.appendChild(avg);
     if (transform == null) { transform = function(val) { return val; } }
     for (var i = 0; i < values.length; i++) {
-        html += "<option value=\"" + values[i] + "\">" + transform(values[i]) + "</option>";
+        var opt = createOption(transform(values[i]), values[i]);
+        element.appendChild(opt);
     }
-    element.append(html);
 }
 
 function populateTable(callback) {
