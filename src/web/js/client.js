@@ -77,7 +77,7 @@ function fillSelect(element, values, transform) {
     var html = "";
     var createOption = function(name, value) {
         var opt = document.createElement('option');
-        opt.innerHTML = name;
+        opt.textContent = name;
         var val = value === undefined ? name : value;
         opt.value = val;
         return opt;
