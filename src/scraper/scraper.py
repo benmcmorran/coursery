@@ -2,10 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import os
 import re
+import getpass
 
 class Evaluation:
     def toJson(self):
-        template = '{{yr:{},su:"{}",cr:"{}",sc:"{}",in:"{}",rc:{:.1f},ri:{:.1f},wl:{:.0f},gr:"{}"}}'
+        template = '{{"yr":{},"su":"{}","cr":"{}","sc":"{}","in":"{}","rc":{:.1f},"ri":{:.1f},"wl":{:.0f},"gr":"{}"}}'
         return template.format(
             self.year, self.subject, self.course, self.section, self.instructor, self.courseQuality,
             self.instructorQuality, self.workload, self.grade)
@@ -28,8 +29,8 @@ pages = {
 }
 
 def runGetUrls():
-    username = raw_input('username: ')
-    password = raw_input('password: ')
+    username = input('username: ')
+    password = getpass.getpass('password: ')
     
     try:
         login(username, password)
@@ -46,9 +47,9 @@ def runGetUrls():
         print('Login failed')
 
 def runDownloadUrls():
-    username = raw_input('username: ')
-    password = raw_input('password: ')
-    filename = raw_input('url file: ')
+    username = input('username: ')
+    password = getpass.getpass('password: ')
+    filename = input('url file: ')
     
     try:
         login(username, password)
@@ -64,7 +65,7 @@ def runProcessDownloads():
         pass
     
     filenames = os.listdir(os.path.join(os.getcwd(), 'temp'))
-    json = "courses=[\n"
+    json = '[\n'
     for name in filenames:
         try:
             evaluation = None
@@ -72,10 +73,15 @@ def runProcessDownloads():
             with open(path, 'r') as html:
                 evaluation = parseEvaluation(html.read())
                 json += evaluation.toJson() + ',\n'
-            os.rename(path, os.path.join('evaluations', evaluation.toFilename()))
-        except Exception:
+            try:
+                os.rename(path, os.path.join('evaluations', evaluation.toFilename()))
+            except OSError:
+                # The naming scheme can't handle multiple instructors teaching a course
+                # Just ignore this case if it happens
+                pass
+        except Exception as e:
             print('Error processing ' + name)
-    json += '];'
+    json += ']'
     
     with open('courses.json', 'w') as courses:
         courses.write(json)
@@ -93,9 +99,9 @@ def parseEvaluation(text):
     result.instructor = re.search(r'Prof\. ([^<]+)', text).group(1)
 
     matches = re.finditer(r'<p.*?> ([\d\.]+)</p>', text)
-    match = matches.next()
+    match = next(matches)
     result.courseQuality = float(match.group(1))
-    match = matches.next()
+    match = next(matches)
     result.instructorQuality = float(match.group(1))
 
     aCount = int(re.search(r'A</p>.*?(\d+)', text, re.DOTALL).group(1))
@@ -152,13 +158,14 @@ def downloadEvaluations(urlFile):
         except Exception:
             pass
         for url in urls.read().splitlines():
-            print('Downloading evaluation ' + str(i))
+            print('Downloading evaluation ' + str(i), end='\r')
             downloadEvaluation(url, os.path.join(directory, str(i) + '.htm'))
             i += 1
+        print('Done')
 
 def downloadEvaluation(url, name):
     response = session.get(pages['home'] + url, stream=True)
-    with open(name, 'w') as output:
+    with open(name, 'wb') as output:
         for block in response.iter_content(1024):
             if block:
                 output.write(block)
@@ -192,7 +199,8 @@ def courses(year):
     document = BeautifulSoup(response.text)
     for option in (document.find('select', { 'name': 'IN_SUBCRSE' })
                            .find_all('option')):
-        yield option['value']
+        if option['value']:
+            yield option['value']
 
 def sections(course, year):
     response = session.post(pages['section'], params = {
